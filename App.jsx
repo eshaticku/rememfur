@@ -382,7 +382,6 @@ const NAV_ITEMS = [
   {id:"gesture",   icon:"🎁", label:"Send a gesture", sub:"Support a friend"},
   {id:"shop",      icon:"🛍", label:"Shop",           sub:"Keepsakes"},
   {id:"resources", icon:"📚", label:"Resources",      sub:"Support & guides"},
-  {id:"myspace",   icon:"🌿", label:"My Space",       sub:"Your sanctuary"},
 ];
 
 /* ─── Grief stages ───────────────────────────────────────────────────────── */
