@@ -34,9 +34,12 @@ body{font-family:'Nunito',sans-serif;color:var(--ink);-webkit-font-smoothing:ant
 .nav-right{display:flex;align-items:center;gap:.6rem;margin-left:auto;flex-shrink:0}
 
 
-/* ── Location / journey buttons ── */
-.loc-btn{display:flex;align-items:center;gap:.35rem;font-size:.71rem;color:var(--muted);background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:.28rem .75rem;cursor:pointer;transition:all .2s;white-space:nowrap}
-.loc-btn:hover{border-color:var(--sage);color:var(--sage-d)}
+/* ── Location pin button ── */
+.loc-pin{display:flex;align-items:center;justify-content:center;width:46px;height:28px;border-radius:20px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .2s;flex-shrink:0}
+.loc-pin:hover{border-color:var(--border2);background:var(--border)}
+.loc-pin.active{background:var(--sage-l);border-color:rgba(94,140,106,.4)}
+.loc-pin svg{display:block}
+/* ── Journey button ── */
 .journey-btn{background:var(--sage);color:#fff;border:none;padding:.42rem 1.05rem;border-radius:24px;font-family:'Nunito',sans-serif;font-size:.79rem;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
 .journey-btn:hover{background:var(--sage-d)}
 .journey-btn.has-pet{background:var(--terra)}
@@ -307,7 +310,28 @@ hr.dv{border:none;border-top:1px solid var(--border);margin:1.2rem 0}
 .gest-badge-rose{background:var(--rose-l);color:var(--rose);border-color:rgba(196,122,106,.2)}
 .gest-note{font-size:.8rem;color:var(--muted);line-height:1.6;background:var(--bg2);border-radius:10px;padding:.85rem 1rem;margin-bottom:1.2rem;border:1px solid var(--border)}
 
-/* ── In Their Honour ── */
+/* ── My Space ── */
+.ms-header{display:flex;align-items:flex-start;gap:1rem;margin-bottom:2rem}
+.ms-header-icon{font-size:2.5rem;flex-shrink:0;margin-top:.2rem}
+.ms-empty{text-align:center;background:var(--white);border:1.5px dashed var(--border2);border-radius:var(--r);padding:3rem 2rem;margin:2rem 0}
+.ms-pets-shelf{display:flex;gap:.85rem;flex-wrap:wrap;margin-bottom:2rem}
+.ms-pet-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:1.2rem 1rem;min-width:130px;max-width:160px;text-align:center;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:.18rem}
+.ms-pet-card:hover{border-color:var(--sage);box-shadow:0 4px 16px var(--shadow2);transform:translateY(-2px)}
+.ms-pet-emoji{font-size:2.2rem;margin-bottom:.3rem}
+.ms-pet-name{font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--ink);font-weight:600}
+.ms-pet-breed{font-size:.68rem;color:var(--muted)}
+.ms-pet-years{font-size:.68rem;color:var(--sage-d);font-weight:700;margin-top:.1rem}
+.ms-pet-link{font-size:.66rem;color:var(--sage);margin-top:.4rem}
+.ms-pet-add{background:var(--bg2);border:1.5px dashed var(--border2);border-radius:14px;padding:1.2rem 1rem;min-width:110px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all .2s;font-family:'Nunito',sans-serif}
+.ms-pet-add:hover{border-color:var(--sage);background:var(--sage-l)}
+.ms-section-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem 1.35rem;margin-bottom:1.2rem;box-shadow:0 2px 10px var(--shadow)}
+.ms-timeline{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:1.3rem 1.35rem;margin-bottom:2rem;box-shadow:0 2px 10px var(--shadow)}
+.ms-artifacts-list{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.ms-artifact-item{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:.85rem 1rem;display:flex;gap:.75rem;align-items:flex-start}
+.ms-artifact-icon{font-size:1.3rem;flex-shrink:0}
+.ms-artifact-title{font-size:.84rem;font-weight:700;color:var(--ink)}
+.ms-artifact-sub{font-size:.72rem;color:var(--muted);margin-top:.1rem}
+
 .honour-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem;margin-bottom:1.5rem}
 .honour-card{background:var(--white);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;transition:all .22s;display:flex;flex-direction:column}
 .honour-card:hover{box-shadow:0 6px 20px var(--shadow2);transform:translateY(-2px);border-color:var(--sage)}
@@ -352,12 +376,13 @@ function Spinner(){return <span className="spinner"/>;}
 
 /* ─── Nav config ─────────────────────────────────────────────────────────── */
 const NAV_ITEMS = [
-  {id:"home",      icon:"🏡", label:"Home",         sub:"Welcome"},
-  {id:"remember",  icon:"🌿", label:"Memorials",    sub:"Remember them"},
-  {id:"community", icon:"🤝", label:"Community",    sub:"Memory wall"},
+  {id:"home",      icon:"🏡", label:"Home",           sub:"Welcome"},
+  {id:"remember",  icon:"🌿", label:"Memorials",      sub:"Remember them"},
+  {id:"community", icon:"🤝", label:"Community",      sub:"Memory wall"},
   {id:"gesture",   icon:"🎁", label:"Send a gesture", sub:"Support a friend"},
-  {id:"shop",      icon:"🛍", label:"Shop",         sub:"Keepsakes"},
-  {id:"resources", icon:"📚", label:"Resources",    sub:"Support & guides"},
+  {id:"shop",      icon:"🛍", label:"Shop",           sub:"Keepsakes"},
+  {id:"resources", icon:"📚", label:"Resources",      sub:"Support & guides"},
+  {id:"myspace",   icon:"🌿", label:"My Space",       sub:"Your sanctuary"},
 ];
 
 /* ─── Grief stages ───────────────────────────────────────────────────────── */
@@ -553,7 +578,7 @@ function HomeView({onNav}) {
           <div style={{fontSize:"2rem",marginBottom:".65rem"}}>🕯️</div>
           <h2>When you're ready,<br/>we're here.</h2>
           <p>A private, adaptive grief companion built specifically for pet loss. Eight tools for the real emotional terrain — guilt, the firsts, the need to write to them. Go at your pace. Nothing here expires.</p>
-          <button className="btn btn-sage" style={{fontSize:".9rem",padding:".62rem 1.7rem"}} onClick={()=>onNav("journey")}>Begin my grief journey</button>
+          <button className="btn btn-sage" style={{fontSize:".9rem",padding:".62rem 1.7rem"}} onClick={()=>onNav("myspace")}>Begin my grief journey</button>
           <p style={{fontSize:".71rem",color:"var(--muted)",marginTop:".65rem",fontStyle:"italic"}}>Free · Private · No account needed</p>
         </div>
 
@@ -1450,6 +1475,288 @@ function LocationModal({onSelect,onSkip}) {
   );
 }
 
+/* ─── VIEW: My Space ─────────────────────────────────────────────────────── */
+
+// ── Dummy data for preview ──
+const DUMMY_PETS = [
+  {name:"Bruno",   emoji:"🐶", breed:"Labrador Retriever", born:"2010-05-12", passed:"2024-01-08", candles:24, msgs:8,  id:"bruno"},
+  {name:"Mia",     emoji:"🐱", breed:"Siamese",            born:"2014-03-18", passed:"2023-11-05", candles:41, msgs:12, id:"mia"},
+  {name:"Coco",    emoji:"🐰", breed:"Holland Lop",        born:"2019-05-22", passed:"2023-09-30", candles:12, msgs:4,  id:"coco"},
+];
+const DUMMY_ARTIFACTS = [
+  {icon:"✉️", title:"Letter to Bruno",           sub:"Written 3 weeks ago · Healing Tool",         tag:"letter",  pet:"Bruno",  date:"Feb 18, 2024"},
+  {icon:"✨", title:"AI Tribute Poem for Mia",    sub:"Generated Nov 2023 · Memorial",              tag:"poem",    pet:"Mia",    date:"Nov 12, 2023"},
+  {icon:"💬", title:"Guilt Release — Bruno",      sub:"Written 2 months ago · Healing Tool",        tag:"guilt",   pet:"Bruno",  date:"Jan 22, 2024"},
+  {icon:"🌿", title:"Permission Slip — Coco",     sub:"Written Oct 2023 · Healing Tool",            tag:"slip",    pet:"Coco",   date:"Oct 5, 2023"},
+  {icon:"🌻", title:"What Mia Taught Me",         sub:"Written Dec 2023 · Healing Tool",            tag:"taught",  pet:"Mia",    date:"Dec 1, 2023"},
+  {icon:"📅", title:"30-Day Companion — Day 14",  sub:"In progress · Started Jan 2024",             tag:"30days",  pet:"Bruno",  date:"Jan 22, 2024"},
+];
+const DUMMY_ACTS = [
+  {icon:"🍚", title:"Fed a shelter resident",     partner:"Blue Cross of India", date:"Feb 10, 2024", pet:"Bruno",  amount:"₹500"},
+  {icon:"🌱", title:"Planted a memorial tree",    partner:"SankalpTaru",         date:"Nov 15, 2023", pet:"Mia",    amount:"₹350"},
+  {icon:"💉", title:"Gifted a microchip",         partner:"Blue Cross of India", date:"Oct 8, 2023",  pet:"Coco",   amount:"₹400"},
+];
+const DUMMY_MILESTONES = [
+  {icon:"🕯️", text:"One month since Bruno passed",       date:"Feb 8, 2024",  done:true},
+  {icon:"🌑", text:"Started your grief journey",          date:"Jan 15, 2024", done:true},
+  {icon:"🌱", text:"First candle lit for Mia",            date:"Nov 5, 2023",  done:true},
+  {icon:"💌", text:"First guest book message left",       date:"Nov 12, 2023", done:true},
+  {icon:"🌕", text:"One year since Coco passed",          date:"Sep 30, 2024", done:false},
+  {icon:"✨", text:"Six months since Bruno passed",       date:"Jul 8, 2024",  done:false},
+];
+const DUMMY_STAGE = "active";
+
+function MySpaceView({ pet, setPet, stage, setStage, onNav }) {
+  const [section,setSection]=useState("overview");
+  const [shareGenerated,setShareGenerated]=useState(false);
+  const [shareUrl]=useState("rememfur.app/tribute/priya-83421");
+  const [copied,setCopied]=useState(false);
+  const [expandArtifact,setExpandArtifact]=useState(null);
+
+  // Use dummy data so the page is always fully populated for preview
+  const myPets = DUMMY_PETS;
+  const artifacts = DUMMY_ARTIFACTS;
+  const acts = DUMMY_ACTS;
+  const milestones = DUMMY_MILESTONES;
+  const activeStage = DUMMY_STAGE;
+  const cs = STAGES.find(s=>s.id===activeStage)||STAGES[1];
+
+  // Journey section — full screen
+  if(section==="journey") return(
+    <div>
+      <div style={{maxWidth:"740px",margin:"0 auto",padding:"1.5rem 1.5rem 0"}}>
+        <button className="btn btn-ghost btn-sm" onClick={()=>setSection("overview")}>← My Space</button>
+      </div>
+      <GriefJourneyView pet={pet} setPet={setPet} stage={stage} setStage={setStage}/>
+    </div>
+  );
+
+  const BAR_COLOURS=["var(--sage)","var(--terra)","var(--amber)","var(--rose)"];
+  const allYears = myPets.flatMap(p=>[new Date(p.born).getFullYear(),new Date(p.passed).getFullYear()]);
+  const minYear = Math.min(...allYears);
+  const maxYear = Math.max(...allYears);
+  const span = maxYear-minYear||1;
+
+  // Stats
+  const totalCandles = myPets.reduce((a,p)=>a+p.candles,0);
+  const totalMsgs    = myPets.reduce((a,p)=>a+p.msgs,0);
+  const totalYears   = myPets.reduce((a,p)=>a+Math.round((new Date(p.passed)-new Date(p.born))/86400000/365),0);
+
+  return(
+    <div className="page fade">
+
+      {/* ── Header ── */}
+      <div style={{marginBottom:"2rem"}}>
+        <div className="ph-eye">My Space · Priya M.</div>
+        <h1 className="ph-title" style={{fontSize:"2rem",marginBottom:".4rem"}}>Your sanctuary.</h1>
+        <p className="ph-desc">Three beloved animals. A lifetime of love. Everything in one place — private to you.</p>
+      </div>
+
+      {/* ── At a glance stats ── */}
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(130px,1fr))",gap:".75rem",marginBottom:"2rem"}}>
+        {[
+          {n:myPets.length,  label:"pets loved",          icon:"🐾"},
+          {n:totalYears,     label:"years of shared life", icon:"💛"},
+          {n:totalCandles,   label:"candles lit",          icon:"🕯️"},
+          {n:acts.length,    label:"acts in their honour", icon:"🌱"},
+          {n:artifacts.length,label:"things created",      icon:"✨"},
+          {n:totalMsgs,      label:"guest messages",       icon:"💌"},
+        ].map((s,i)=>(
+          <div key={i} className="num-card fade" style={{animationDelay:`${i*.05}s`,textAlign:"center"}}>
+            <div style={{fontSize:"1.2rem",marginBottom:".2rem"}}>{s.icon}</div>
+            <div className="num-big" style={{fontSize:"1.6rem"}}>{s.n}</div>
+            <div className="num-label">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── My Pets ── */}
+      <div className="sec-label">
+        <span className="eye">My Pets</span>
+        <h2>The ones who <em>shaped you.</em></h2>
+      </div>
+      <div className="ms-pets-shelf">
+        {myPets.map((p,i)=>{
+          const sy=new Date(p.born).getFullYear();
+          const ey=new Date(p.passed).getFullYear();
+          return(
+            <div key={i} className="ms-pet-card fade" style={{animationDelay:`${i*.07}s`}} onClick={()=>onNav({view:"remember",mode:"list"})}>
+              <div className="ms-pet-emoji">{p.emoji}</div>
+              <div className="ms-pet-name">{p.name}</div>
+              <div className="ms-pet-breed">{p.breed}</div>
+              <div className="ms-pet-years">{sy}–{ey}</div>
+              <div style={{fontSize:".67rem",color:"var(--muted)",marginTop:".1rem"}}>{ey-sy} years · {p.candles} candles</div>
+              <div className="ms-pet-link">View memorial →</div>
+            </div>
+          );
+        })}
+        <button className="ms-pet-add" onClick={()=>onNav({view:"remember",mode:"create"})}>
+          <div style={{fontSize:"1.6rem",marginBottom:".3rem"}}>+</div>
+          <div style={{fontSize:".75rem",color:"var(--muted)"}}>Add a pet</div>
+        </button>
+      </div>
+
+      {/* ── My Grief Journey ── */}
+      <div className="ms-section-card" style={{marginBottom:"2rem"}}>
+        <div style={{display:"flex",alignItems:"flex-start",justifyContent:"space-between",gap:".75rem",flexWrap:"wrap"}}>
+          <div style={{flex:1}}>
+            <div style={{fontSize:".62rem",letterSpacing:".12em",textTransform:"uppercase",color:"var(--sage)",fontWeight:700,marginBottom:".3rem"}}>My Grief Journey</div>
+            <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.18rem",color:"var(--ink)",marginBottom:".25rem"}}>{cs.moon} {cs.name}</div>
+            <div style={{fontSize:".79rem",color:"var(--muted)",lineHeight:1.6,marginBottom:".85rem"}}>{GREETING[activeStage]}</div>
+            <div style={{display:"flex",gap:".5rem",flexWrap:"wrap"}}>
+              {["guilt","letter","30days"].map(id=>{
+                const t=TOOLS.find(x=>x.id===id);
+                return t?<span key={id} style={{fontSize:".68rem",background:"var(--sage-l)",color:"var(--sage-d)",border:"1px solid rgba(94,140,106,.25)",borderRadius:"20px",padding:".18rem .6rem",fontWeight:700}}>{t.icon} {t.name}</span>:null;
+              })}
+              <span style={{fontSize:".68rem",color:"var(--muted)",alignSelf:"center"}}>+5 tools unlocked</span>
+            </div>
+          </div>
+          <button className="btn btn-sage btn-sm" style={{flexShrink:0,marginTop:".2rem"}} onClick={()=>setSection("journey")}>Continue →</button>
+        </div>
+      </div>
+
+      {/* ── My Timeline ── */}
+      <div className="sec-label">
+        <span className="eye">My Timeline</span>
+        <h2>A life <em>with animals.</em></h2>
+        <p>Three lives, overlapping. The years you shared the same home.</p>
+      </div>
+      <div className="ms-timeline" style={{marginBottom:"2rem"}}>
+        {myPets.map((p,i)=>{
+          const sy=new Date(p.born).getFullYear();
+          const ey=new Date(p.passed).getFullYear();
+          const left=((sy-minYear)/span)*100;
+          const width=Math.max(((ey-sy)/span)*100,4);
+          return(
+            <div key={i} style={{marginBottom:"1.1rem"}}>
+              <div style={{display:"flex",alignItems:"center",gap:".55rem",marginBottom:".32rem"}}>
+                <span style={{fontSize:"1.05rem"}}>{p.emoji}</span>
+                <span style={{fontSize:".82rem",fontWeight:700,color:"var(--ink)"}}>{p.name}</span>
+                <span style={{fontSize:".71rem",color:"var(--muted)"}}>{sy}–{ey} · {ey-sy} yrs</span>
+              </div>
+              <div style={{position:"relative",height:"16px",background:"var(--bg2)",borderRadius:"8px",overflow:"visible"}}>
+                <div style={{position:"absolute",left:`${left}%`,width:`${width}%`,height:"100%",background:BAR_COLOURS[i],borderRadius:"8px",opacity:.85}}/>
+              </div>
+            </div>
+          );
+        })}
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:".68rem",color:"var(--muted)",marginTop:"1rem",borderTop:"1px solid var(--border)",paddingTop:".6rem"}}>
+          <span>{minYear}</span>
+          {Array.from({length:maxYear-minYear+1},((_,i)=>minYear+i)).filter(y=>y%2===0).map(y=>(
+            <span key={y} style={{fontSize:".62rem"}}>{y}</span>
+          ))}
+          <span>{maxYear}</span>
+        </div>
+        <div style={{marginTop:"1rem",padding:".75rem",background:"var(--bg)",borderRadius:"10px",fontSize:".78rem",color:"var(--muted)",lineHeight:1.65,fontStyle:"italic"}}>
+          💛 For 4 years (2019–2023), Bruno, Mia, and Coco shared the same home.
+        </div>
+      </div>
+
+      {/* ── Milestones ── */}
+      <div className="sec-label">
+        <span className="eye">Milestones</span>
+        <h2>Moments quietly <em>marked.</em></h2>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".5rem",marginBottom:"2rem"}}>
+        {milestones.map((m,i)=>(
+          <div key={i} className="fade" style={{display:"flex",alignItems:"center",gap:".75rem",padding:".7rem .9rem",background:m.done?"var(--white)":"var(--bg2)",border:`1px solid ${m.done?"var(--border)":"var(--border)"}`,borderRadius:"12px",opacity:m.done?1:.6,animationDelay:`${i*.04}s`}}>
+            <span style={{fontSize:"1.1rem",flexShrink:0}}>{m.icon}</span>
+            <div style={{flex:1}}>
+              <div style={{fontSize:".83rem",fontWeight:m.done?700:400,color:m.done?"var(--ink)":"var(--muted)"}}>{m.text}</div>
+              <div style={{fontSize:".68rem",color:"var(--muted)",marginTop:".08rem"}}>{m.date}</div>
+            </div>
+            {m.done?<span style={{fontSize:".65rem",fontWeight:700,color:"var(--sage-d)",background:"var(--sage-l)",border:"1px solid rgba(94,140,106,.25)",borderRadius:"20px",padding:".15rem .5rem"}}>✓ Reached</span>
+            :<span style={{fontSize:".65rem",color:"var(--muted)",fontStyle:"italic"}}>upcoming</span>}
+          </div>
+        ))}
+      </div>
+
+      {/* ── My Artifacts ── */}
+      <div className="sec-label">
+        <span className="eye">My Artifacts</span>
+        <h2>Things you've <em>made and written.</em></h2>
+        <p>Letters, poems, reflections. Everything created in this space — saved for you.</p>
+      </div>
+      <div className="ms-artifacts-list" style={{marginBottom:"2rem"}}>
+        {artifacts.map((a,i)=>(
+          <div key={i} className="ms-artifact-item fade" style={{animationDelay:`${i*.05}s`,cursor:"pointer",transition:"border-color .18s"}}
+            onClick={()=>setExpandArtifact(expandArtifact===i?null:i)}>
+            <div className="ms-artifact-icon">{a.icon}</div>
+            <div style={{flex:1}}>
+              <div className="ms-artifact-title">{a.title}</div>
+              <div className="ms-artifact-sub">{a.sub}</div>
+              {expandArtifact===i&&<div style={{marginTop:".65rem",fontSize:".79rem",color:"var(--ink2)",lineHeight:1.65,fontStyle:"italic",borderLeft:"2px solid var(--border2)",paddingLeft:".75rem"}}>
+                {a.tag==="letter"&&`Dear Bruno,\n\nI keep reaching for you in the morning. That instinct, before I'm fully awake, to look toward your bed. Fourteen years of mornings — you'd think I'd remember by now. But grief doesn't work like that…`}
+                {a.tag==="poem"&&`She came in winter, quiet as frost,\nAnd settled like she'd never been lost.\nSiamese and certain, watching the room —\nMia, who filled it, and left it too soon.`}
+                {a.tag==="guilt"&&`The thing I need to say out loud: I keep wondering if I made the decision too soon. The vet said it was time. You couldn't eat. But those last eyes — you were still looking at me like you had things to say.`}
+                {a.tag==="slip"&&`I give myself permission to not be okay today. I give myself permission to cry at the sound of a dog barking outside. I give myself permission to miss Coco in ways that don't make sense to other people.`}
+                {a.tag==="taught"&&`Mia taught me that love doesn't require explanation. She never justified her affection. She simply gave it, on her terms, and I learned to receive it that way.`}
+                {a.tag==="30days"&&`Day 14 prompt: "The funny ones deserve to live too."\n\nBruno once ate an entire wheel of cheese off the counter and then sat in front of me with the most serene expression I've ever seen on a living creature. No remorse. Complete peace.`}
+              </div>}
+            </div>
+            <div style={{fontSize:".68rem",color:"var(--muted)",flexShrink:0,textAlign:"right"}}>
+              <div>{a.date}</div>
+              <div style={{marginTop:".2rem",color:"var(--sage-d)"}}>{expandArtifact===i?"collapse ↑":"read ↓"}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Acts in Their Honour ── */}
+      <div className="sec-label">
+        <span className="eye">In Their Honour</span>
+        <h2>Love made <em>real.</em></h2>
+        <p>Acts of kindness done in their names. A record of love that rippled outward.</p>
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:".6rem",marginBottom:"2rem"}}>
+        {acts.map((a,i)=>(
+          <div key={i} className="ms-artifact-item fade" style={{animationDelay:`${i*.05}s`,background:"linear-gradient(135deg,var(--sage-l),var(--white))"}}>
+            <div className="ms-artifact-icon">{a.icon}</div>
+            <div style={{flex:1}}>
+              <div className="ms-artifact-title">{a.title}</div>
+              <div className="ms-artifact-sub">via {a.partner} · In {a.pet}'s name</div>
+            </div>
+            <div style={{fontSize:".72rem",color:"var(--muted)",textAlign:"right",flexShrink:0}}>
+              <div style={{fontWeight:700,color:"var(--sage-d)"}}>{a.amount}</div>
+              <div style={{marginTop:".1rem"}}>{a.date}</div>
+            </div>
+          </div>
+        ))}
+        <button className="btn btn-ghost btn-sm" style={{alignSelf:"flex-start"}} onClick={()=>onNav("shop")}>+ Do another act →</button>
+      </div>
+
+      {/* ── Share Tribute ── */}
+      <div className="ms-section-card" style={{textAlign:"center",background:"linear-gradient(135deg,var(--sage-l),var(--white))"}}>
+        <div style={{fontSize:"1.6rem",marginBottom:".55rem"}}>🔗</div>
+        <div style={{fontFamily:"'Cormorant Garamond',serif",fontSize:"1.35rem",color:"var(--ink)",marginBottom:".4rem"}}>Share a tribute page</div>
+        <p style={{fontSize:".82rem",color:"var(--muted)",lineHeight:1.7,maxWidth:"380px",margin:"0 auto 1.35rem"}}>
+          A beautiful read-only page your family can visit — your pets, their stories, a place to leave a candle. Nothing can be edited by anyone but you.
+        </p>
+        {shareGenerated?(
+          <>
+            <div style={{background:"var(--white)",border:"1px solid rgba(94,140,106,.3)",borderRadius:"10px",padding:".85rem 1rem",marginBottom:".75rem",fontSize:".82rem",color:"var(--ink)",wordBreak:"break-all",maxWidth:"420px",margin:"0 auto .75rem"}}>
+              {shareUrl}
+            </div>
+            <div style={{display:"flex",gap:".5rem",justifyContent:"center",flexWrap:"wrap"}}>
+              <button className="btn btn-sage btn-sm" onClick={()=>{navigator.clipboard?.writeText(`https://${shareUrl}`);setCopied(true);setTimeout(()=>setCopied(false),2500);}}>
+                {copied?"✓ Copied!":"📋 Copy link"}
+              </button>
+              <button className="btn btn-ghost btn-sm">📧 Email to family</button>
+              <button className="btn btn-ghost btn-sm" onClick={()=>setShareGenerated(false)}>Reset</button>
+            </div>
+            <p style={{fontSize:".71rem",color:"var(--muted)",marginTop:".85rem",fontStyle:"italic"}}>
+              Anyone with this link can view and light a candle — but cannot edit anything.
+            </p>
+          </>
+        ):(
+          <button className="btn btn-sage" onClick={()=>setShareGenerated(true)}>Generate tribute link →</button>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
 /* ─── App Shell ──────────────────────────────────────────────────────────── */
 export default function App() {
   useEffect(()=>{
@@ -1472,14 +1779,12 @@ export default function App() {
     });
   },[]);
 
-  const selectLoc=async(allow)=>{setHasLocation(allow);await sv("has-loc",allow);if(allow)setCurrency("₹");setShowLoc(false);};
+  const selectLoc=async(allow)=>{setHasLocation(allow);await sv("has-loc",allow);if(allow)setCurrency("₹");else setCurrency("$");setShowLoc(false);};
 
   const navTo = (dest) => {
     if(typeof dest === "string") { setView(dest); }
     else { setView(dest.view); if(dest.mode) setRememberMode(dest.mode); }
   };
-
-  const journeyLabel = pet?`${pet.emoji} My Journey`:"🕯 My grief journey";
 
   return(
     <>
@@ -1491,18 +1796,30 @@ export default function App() {
             {NAV_ITEMS.map(n=><button key={n.id} className={`tnl ${view===n.id?"act":""}`} onClick={()=>navTo(n.id)}>{n.label}</button>)}
           </div>
           <div className="nav-right">
-            {hasLocation&&<button className="loc-btn" onClick={()=>setShowLoc(true)}>📍 Location on</button>}
-            <button className={`journey-btn ${pet?"has-pet":""}`} onClick={()=>navTo("journey")}>{journeyLabel}</button>
+            <button className={`journey-btn ${pet?"has-pet":""}`} onClick={()=>navTo("myspace")}>
+              {pet?`${pet.emoji} My Space`:"🕯 My Space"}
+            </button>
+            <button
+              className={`loc-pin ${hasLocation?"active":""}`}
+              onClick={()=>setShowLoc(true)}
+              title={hasLocation?"Location on — click to change":"Location off — click to enable"}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill={hasLocation?"var(--sage)":"#9A8F80"}/>
+                <circle cx="12" cy="9" r="2.5" fill={hasLocation?"#fff":"var(--bg2)"}/>
+              </svg>
+            </button>
           </div>
         </nav>
         <div className="main-scroll">
           {view==="home"      && <HomeView      onNav={navTo}/>}
-          {view==="journey"   && <GriefJourneyView pet={pet} setPet={setPet} stage={stage} setStage={setStage}/>}
-          {view==="remember"  && <RememberView initialMode={rememberMode} onModeChange={setRememberMode}/>}
+          {view==="journey"   && <MySpaceView   pet={pet} setPet={setPet} stage={stage} setStage={setStage} onNav={navTo}/>}
+          {view==="remember"  && <RememberView  initialMode={rememberMode} onModeChange={setRememberMode}/>}
           {view==="community" && <CommunityView/>}
           {view==="gesture"   && <GestureView/>}
           {view==="shop"      && <ShopView      currency={currency}/>}
           {view==="resources" && <ResourcesView hasLocation={hasLocation}/>}
+          {view==="myspace"   && <MySpaceView   pet={pet} setPet={setPet} stage={stage} setStage={setStage} onNav={navTo}/>}
         </div>
       </div>
     </>
