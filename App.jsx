@@ -578,7 +578,7 @@ function HomeView({onNav}) {
           <div style={{fontSize:"2rem",marginBottom:".65rem"}}>🕯️</div>
           <h2>When you're ready,<br/>we're here.</h2>
           <p>A private, adaptive grief companion built specifically for pet loss. Eight tools for the real emotional terrain — guilt, the firsts, the need to write to them. Go at your pace. Nothing here expires.</p>
-          <button className="btn btn-sage" style={{fontSize:".9rem",padding:".62rem 1.7rem"}} onClick={()=>onNav("myspace")}>Begin my grief journey</button>
+          <button className="btn btn-sage" style={{fontSize:".9rem",padding:".62rem 1.7rem"}} onClick={()=>onNav("journey")}>Begin my grief journey</button>
           <p style={{fontSize:".71rem",color:"var(--muted)",marginTop:".65rem",fontStyle:"italic"}}>Free · Private · No account needed</p>
         </div>
 
@@ -1039,8 +1039,10 @@ function RememberView({ initialMode, onModeChange }) {
 }
 
 /* ─── VIEW: My Grief Journey ─────────────────────────────────────────────── */
-function GriefJourneyView({pet,setPet,stage,setStage}) {
-  const [step,setStep]=useState(pet?"dashboard":"welcome");
+function GriefJourneyView({pet,setPet,stage,setStage,journeyStarted,setJourneyStarted}) {
+  const [step,setStep]=useState((pet||journeyStarted)?"dashboard":"welcome");
+
+  useEffect(()=>{ window.scrollTo({top:0,behavior:"instant"}); },[]);
   const [wantsPet,setWantsPet]=useState(null);
   const [dPet,setDP]=useState({name:"",emoji:"🐶",breed:"",born:"",passed:""});
   const [dStage,setDS]=useState(stage||null);
@@ -1051,7 +1053,7 @@ function GriefJourneyView({pet,setPet,stage,setStage}) {
   const setP=(k,v)=>setDP(p=>({...p,[k]:v}));
   const cs=STAGES.find(x=>x.id===stage)||STAGES[0];
 
-  const finish=async()=>{const fp=wantsPet&&dPet.name.trim()?dPet:null;const fs=dStage||"raw";if(fp){await sv("gj-pet",fp);setPet(fp);}await sv("gj-stage",fs);setStage(fs);setStep("dashboard");};
+  const finish=async()=>{const fp=wantsPet&&dPet.name.trim()?dPet:null;const fs=dStage||"raw";if(fp){await sv("gj-pet",fp);setPet(fp);}await sv("gj-stage",fs);setStage(fs);await sv("gj-started",true);if(setJourneyStarted)setJourneyStarted(true);setStep("dashboard");};
   const pn=pet?.name||"them";
   const daysLived=pet?.born&&pet?.passed?Math.round((new Date(pet.passed)-new Date(pet.born))/86400000):null;
   const MOODS=["😔 Heavy","😐 Numb","🌤 Okay-ish","💛 Grateful today"];
@@ -1506,7 +1508,7 @@ const DUMMY_MILESTONES = [
 ];
 const DUMMY_STAGE = "active";
 
-function MySpaceView({ pet, setPet, stage, setStage, onNav }) {
+function MySpaceView({ pet, setPet, stage, setStage, onNav, journeyStarted, setJourneyStarted }) {
   const [section,setSection]=useState("overview");
   const [shareGenerated,setShareGenerated]=useState(false);
   const [shareUrl]=useState("rememfur.app/tribute/priya-83421");
@@ -1527,7 +1529,7 @@ function MySpaceView({ pet, setPet, stage, setStage, onNav }) {
       <div style={{maxWidth:"740px",margin:"0 auto",padding:"1.5rem 1.5rem 0"}}>
         <button className="btn btn-ghost btn-sm" onClick={()=>setSection("overview")}>← My Space</button>
       </div>
-      <GriefJourneyView pet={pet} setPet={setPet} stage={stage} setStage={setStage}/>
+      <GriefJourneyView pet={pet} setPet={setPet} stage={stage} setStage={setStage} journeyStarted={journeyStarted} setJourneyStarted={setJourneyStarted}/>
     </div>
   );
 
@@ -1768,13 +1770,15 @@ export default function App() {
   const [rememberMode,setRememberMode]=useState("list");
   const [pet,setPet]=useState(null);
   const [stage,setStage]=useState("raw");
+  const [journeyStarted,setJourneyStarted]=useState(false);
   const [hasLocation,setHasLocation]=useState(null);
   const [showLoc,setShowLoc]=useState(false);
   const [currency,setCurrency]=useState("$");
 
   useEffect(()=>{
-    Promise.all([ld("gj-pet"),ld("gj-stage"),ld("has-loc")]).then(([p,s,l])=>{
+    Promise.all([ld("gj-pet"),ld("gj-stage"),ld("has-loc"),ld("gj-started")]).then(([p,s,l,j])=>{
       if(p?.name)setPet(p); if(s)setStage(s);
+      if(j)setJourneyStarted(true);
       if(l!==null)setHasLocation(l); else setShowLoc(true);
     });
   },[]);
@@ -1784,6 +1788,7 @@ export default function App() {
   const navTo = (dest) => {
     if(typeof dest === "string") { setView(dest); }
     else { setView(dest.view); if(dest.mode) setRememberMode(dest.mode); }
+    document.querySelector(".main-scroll")?.scrollTo({top:0,behavior:"instant"});
   };
 
   return(
@@ -1813,13 +1818,13 @@ export default function App() {
         </nav>
         <div className="main-scroll">
           {view==="home"      && <HomeView      onNav={navTo}/>}
-          {view==="journey"   && <MySpaceView   pet={pet} setPet={setPet} stage={stage} setStage={setStage} onNav={navTo}/>}
+          {view==="journey"   && <GriefJourneyView pet={pet} setPet={setPet} stage={stage} setStage={setStage} journeyStarted={journeyStarted} setJourneyStarted={setJourneyStarted}/>}
           {view==="remember"  && <RememberView  initialMode={rememberMode} onModeChange={setRememberMode}/>}
           {view==="community" && <CommunityView/>}
           {view==="gesture"   && <GestureView/>}
           {view==="shop"      && <ShopView      currency={currency}/>}
           {view==="resources" && <ResourcesView hasLocation={hasLocation}/>}
-          {view==="myspace"   && <MySpaceView   pet={pet} setPet={setPet} stage={stage} setStage={setStage} onNav={navTo}/>}
+          {view==="myspace"   && <MySpaceView   pet={pet} setPet={setPet} stage={stage} setStage={setStage} onNav={navTo} journeyStarted={journeyStarted} setJourneyStarted={setJourneyStarted}/>}
         </div>
       </div>
     </>
