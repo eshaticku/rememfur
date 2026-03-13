@@ -349,6 +349,31 @@ hr.dv{border:none;border-top:1px solid var(--border);margin:1.2rem 0}
 .honour-cert-title{font-family:'Cormorant Garamond',serif;font-size:1.45rem;color:var(--ink);margin-bottom:.35rem;line-height:1.2}
 .honour-cert-body{font-size:.83rem;color:var(--muted);line-height:1.7;margin-bottom:.9rem}
 .honour-cert-stamp{display:inline-flex;align-items:center;gap:.35rem;font-size:.68rem;font-weight:700;color:var(--sage-d);background:var(--white);border:1px solid rgba(94,140,106,.3);border-radius:20px;padding:.3rem .85rem}
+
+/* ── Footer ── */
+.site-footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2rem 0}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.3fr;gap:2.5rem;max-width:1100px;margin:0 auto;padding-bottom:2.5rem}
+@media(max-width:720px){.footer-grid{grid-template-columns:1fr 1fr;gap:1.75rem}}
+@media(max-width:420px){.footer-grid{grid-template-columns:1fr}}
+.footer-brand-icon{width:42px;height:42px;border-radius:50%;background:var(--terra);display:flex;align-items:center;justify-content:center;font-size:1.3rem;margin-bottom:.65rem;flex-shrink:0}
+.footer-brand-name{font-family:'Cormorant Garamond',serif;font-size:1.3rem;color:var(--ink);font-weight:600}
+.footer-tagline{font-size:.78rem;color:var(--muted);line-height:1.65;margin-top:.5rem;max-width:220px}
+.footer-socials{display:flex;gap:.75rem;margin-top:1.1rem}
+.footer-social-btn{width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;color:var(--muted)}
+.footer-social-btn:hover{border-color:var(--terra);color:var(--terra)}
+.footer-col-title{font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:var(--ink);margin-bottom:1rem}
+.footer-link{display:block;font-size:.82rem;color:var(--muted);margin-bottom:.62rem;cursor:pointer;transition:color .18s;background:none;border:none;padding:0;font-family:'Nunito',sans-serif;text-align:left}
+.footer-link:hover{color:var(--terra)}
+.footer-email-row{display:flex;gap:.5rem;margin-top:.85rem}
+.footer-email-input{flex:1;padding:.55rem .85rem;border:1px solid var(--border);border-radius:10px;font-family:'Nunito',sans-serif;font-size:.82rem;background:var(--white);color:var(--ink);outline:none}
+.footer-email-input:focus{border-color:var(--terra)}
+.footer-email-btn{width:40px;height:40px;border-radius:10px;background:var(--terra);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .18s}
+.footer-email-btn:hover{background:var(--terra-d)}
+.footer-bottom{border-top:1px solid var(--border);padding:1.1rem 2rem;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.footer-bottom-left{font-size:.75rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.footer-bottom-right{display:flex;gap:1.25rem}
+.footer-bottom-link{font-size:.75rem;color:var(--muted);cursor:pointer;background:none;border:none;font-family:'Nunito',sans-serif;transition:color .18s}
+.footer-bottom-link:hover{color:var(--ink)}
 `;
 /* ─── Helpers ────────────────────────────────────────────────────────────── */
 const ANTHROPIC_API_KEY = "YOUR_API_KEY_HERE"; // ← paste your key from console.anthropic.com
@@ -1307,6 +1332,7 @@ function GestureView() {
             ))}
           </div>
           {step>1&&<button className="btn btn-ghost btn-sm" onClick={()=>setStep(s=>s-1)}>← Back</button>}
+          {step===1&&<button className="btn btn-ghost btn-sm" onClick={()=>setStep(0)}>← Back</button>}
         </div>
       </div>
     );
@@ -1758,6 +1784,90 @@ function MySpaceView({ pet, setPet, stage, setStage, onNav, journeyStarted, setJ
   );
 }
 
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+function Footer({onNav}) {
+  const [email,setEmail]=useState("");
+  const [subscribed,setSubscribed]=useState(false);
+  return(
+    <footer className="site-footer">
+      <div className="footer-grid">
+
+        {/* Brand */}
+        <div>
+          <div style={{display:"flex",alignItems:"center",gap:".6rem",marginBottom:".5rem"}}>
+            <div className="footer-brand-icon">🐾</div>
+            <span className="footer-brand-name">Rememfur</span>
+          </div>
+          <p className="footer-tagline">A compassionate space to honour and celebrate the pets who've touched our hearts forever.</p>
+          <div className="footer-socials">
+            {[
+              {label:"Facebook", svg:<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>},
+              {label:"Twitter", svg:<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/></svg>},
+              {label:"Instagram", svg:<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>},
+            ].map(s=>(
+              <button key={s.label} className="footer-social-btn" title={s.label}>{s.svg}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Platform */}
+        <div>
+          <div className="footer-col-title">Platform</div>
+          {[
+            {label:"About Us",     dest:null},
+            {label:"Community",    dest:"community"},
+            {label:"Shop",         dest:"shop"},
+            {label:"Create Memorial", dest:{view:"remember",mode:"create"}},
+          ].map(l=>(
+            <button key={l.label} className="footer-link" onClick={()=>l.dest&&onNav(l.dest)}>{l.label}</button>
+          ))}
+        </div>
+
+        {/* Support */}
+        <div>
+          <div className="footer-col-title">Support</div>
+          {[
+            {label:"FAQ",             dest:null},
+            {label:"Grief Resources", dest:"resources"},
+            {label:"Contact Us",      dest:null},
+            {label:"Help Center",     dest:null},
+          ].map(l=>(
+            <button key={l.label} className="footer-link" onClick={()=>l.dest&&onNav(l.dest)}>{l.label}</button>
+          ))}
+        </div>
+
+        {/* Stay Connected */}
+        <div>
+          <div className="footer-col-title">Stay Connected</div>
+          <p style={{fontSize:".8rem",color:"var(--muted)",lineHeight:1.65}}>Join our community for support, resources, and updates.</p>
+          {subscribed?(
+            <div style={{marginTop:".85rem",fontSize:".78rem",color:"var(--sage-d)",fontWeight:700}}>✓ You're in — thank you 🐾</div>
+          ):(
+            <div className="footer-email-row">
+              <input className="footer-email-input" placeholder="Your email" value={email} onChange={e=>setEmail(e.target.value)}/>
+              <button className="footer-email-btn" onClick={()=>email.includes("@")&&setSubscribed(true)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+      </div>
+
+      {/* Bottom bar */}
+      <div className="footer-bottom">
+        <div className="footer-bottom-left">
+          Made with <svg width="13" height="13" viewBox="0 0 24 24" fill="var(--terra)" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> for pet lovers everywhere
+        </div>
+        <div className="footer-bottom-right">
+          <button className="footer-bottom-link">Privacy Policy</button>
+          <button className="footer-bottom-link">Terms of Service</button>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
 /* ─── App Shell ──────────────────────────────────────────────────────────── */
 export default function App() {
   useEffect(()=>{
@@ -1824,6 +1934,7 @@ export default function App() {
           {view==="shop"      && <ShopView      currency={currency}/>}
           {view==="resources" && <ResourcesView hasLocation={hasLocation}/>}
           {view==="myspace"   && <MySpaceView   pet={pet} setPet={setPet} stage={stage} setStage={setStage} onNav={navTo} journeyStarted={journeyStarted} setJourneyStarted={setJourneyStarted}/>}
+          <Footer onNav={navTo}/>
         </div>
       </div>
     </>
